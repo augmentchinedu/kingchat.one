@@ -1,0 +1,29 @@
+{
+  "name": "kingchat.one",
+  "version": "1.0.0",
+  "description": "A King Chat Backend Core Server",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/augmentchinedu/kingchat.one.git"
+  },
+  "keywords": [
+    "KingChat"
+  ],
+  "author": "Augment Chinedu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/augmentchinedu/kingchat.one/issues"
+  },
+  "homepage": "https://github.com/augmentchinedu/kingchat.one#readme",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0"
+  }
+}
