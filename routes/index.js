@@ -15,7 +15,9 @@ router.post("/api/update-client", (req, res) => {
 });
 
 router.all("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"));
+  res.sendFile(
+    path.join(__dirname, "..", "client", "dist", "spa", "index.html")
+  );
 });
 
 module.exports = router;
