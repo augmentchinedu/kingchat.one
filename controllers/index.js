@@ -30,12 +30,17 @@ module.exports = {
 
   getUser: async (req, res) => {
     let uid = req.body.uid;
-    let user = await auth.getUser(uid);
-    let userData = await User.findById(user.uid);
-    userData = userData.toObject();
-    user = { ...user, ...userData };
 
-    res.send(user);
+    try {
+      let user = await auth.getUser(uid);
+      let userData = await User.findById(user.uid);
+      userData = userData.toObject();
+      user = { ...user, ...userData };
+      res.send(user);
+    } catch (error) {
+      console.log(error.message);
+      res.send(error.message);
+    }
   },
 
   signup: async (req, res) => {
