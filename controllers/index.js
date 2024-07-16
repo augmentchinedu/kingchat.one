@@ -113,10 +113,15 @@ module.exports = {
   createPassword: async (req, res) => {
     const uid = req.body.uid;
     const password = req.body.password;
-    await auth.updateUser(uid, {
-      password,
-    });
-    res.send(true);
+    try {
+      await auth.updateUser(uid, {
+        password,
+      });
+      res.send(true);
+    } catch (error) {
+      console.log(error.message);
+      res.send(false);
+    }
   },
 
   updateProfilePhoto: async (req, res) => {
