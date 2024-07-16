@@ -49,7 +49,7 @@ module.exports = {
         email: req.body.email,
         emailVerified: false,
         displayName: req.body.name,
-        password: "12345678",
+        password: req.body.password,
         photoURL:
           "https://storage.googleapis.com/kingchatone.appspot.com/app/avatar.png",
       });
