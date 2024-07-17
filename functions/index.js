@@ -7,6 +7,11 @@ const ENDPOINT = "https://send.api.mailtrap.io/";
 
 const client = new MailtrapClient({ endpoint: ENDPOINT, token: TOKEN });
 
+const sender = {
+  email: "noreply@kingchat.one",
+  name: "King Chat",
+};
+
 //
 // Authentication Functions
 //
@@ -32,10 +37,6 @@ async function generateAndSaveOTP(uid) {
 
 function sendVerificationEmail(user) {
   console.log("Generating Verification Code", user.pin);
-  const sender = {
-    email: "noreply@kingchat.one",
-    name: "King Chat Desk",
-  };
 
   const recipients = [
     {
@@ -54,4 +55,24 @@ function sendVerificationEmail(user) {
   return;
 }
 
-module.exports = { authenticate };
+function sendRecoveryCode(email, code) {
+  console.log("Sending Recovery Code", code);
+
+  const recipients = [
+    {
+      email,
+    },
+  ];
+
+  client.send({
+    from: sender,
+    to: recipients,
+    subject: "Recovery Code",
+    text: `Your Recovery code is ${code}.`,
+    category: "Password Recovery",
+  });
+
+  return true;
+}
+
+module.exports = { authenticate, sendRecoveryCode };

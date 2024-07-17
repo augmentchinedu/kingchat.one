@@ -151,4 +151,32 @@ module.exports = {
       res.send(error.message);
     }
   },
+  generateRecoveryCode: async (req, res) => {
+    const id = req.body.id;
+    const code = Math.floor(100000 + Math.random() * 900000);
+
+    let user;
+
+    // Confirm if ID is a Username or Email
+    if (id.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}$/)) {
+      // This block is for Email
+      user = await User.findOne({ email: id });
+    } else {
+      // This block is for Username
+      user = await User.findOne({ username: id });
+    }
+
+    if (user) {
+      user.auth.otp = code;
+      await user.save();
+      let isRecoveryCodeSent = await functions.sendRecoveryCode(
+        user.email,
+        code
+      );
+
+      if (isRecoveryCodeSent)
+        res.send({ email: user.email, uid: user._id, username: user.username });
+      else res.send(false);
+    } else res.send(false);
+  },
 };

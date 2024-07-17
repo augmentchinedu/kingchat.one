@@ -20,6 +20,10 @@ router.post(
   "/api/auth/update-profile-photo-image",
   controller.updateProfilePhoto
 );
+router.post(
+  "/api/auth/generate-recovery-code",
+  controller.generateRecoveryCode
+);
 
 // Catch All
 router.all("*", (req, res) => {
