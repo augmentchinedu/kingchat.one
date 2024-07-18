@@ -24,6 +24,8 @@ router.post(
   "/api/auth/generate-recovery-code",
   controller.generateRecoveryCode
 );
+// Rooms
+router.get("/api/rooms/enter-room", controller.enterRoom);
 
 // Catch All
 router.all("*", (req, res) => {

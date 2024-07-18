@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{f as t,o}from"./index-BPADXg_z.js";const r={};function c(a,n){return o(),t("div",null,"Chat Page")}const f=e(r,[["render",c]]);export{f as default};

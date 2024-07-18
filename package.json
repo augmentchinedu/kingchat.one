@@ -31,6 +31,7 @@
     "mongoose": "^8.5.0",
     "morgan": "^1.10.0",
     "serve-static-zip": "^1.0.3",
-    "short-unique-id": "^5.2.0"
+    "short-unique-id": "^5.2.0",
+    "socket.io": "^4.7.5"
   }
 }

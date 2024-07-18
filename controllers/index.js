@@ -179,4 +179,8 @@ module.exports = {
       else res.send(false);
     } else res.send(false);
   },
+  // Rooms
+  enterRoom: async (req, res) => {
+    res.send("No Room");
+  },
 };
