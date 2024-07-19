@@ -8,28 +8,22 @@ router.get("/", (req, res) => {
 });
 
 // Auths
-router.post("/api/auth/login", controller.login);
-router.post("/api/auth/get-user", controller.getUser);
-router.post("/api/auth/signup", controller.signup);
-router.post("/api/auth/verify-email", controller.verifyEmail);
-router.post("/api/auth/verify-username", controller.verifyUsername);
-router.post("/api/auth/verify-otp", controller.verifyOTP);
-router.post("/api/auth/create-password", controller.createPassword);
-router.post("/api/auth/update-username", controller.updateUsername);
-router.post(
-  "/api/auth/update-profile-photo-image",
-  controller.updateProfilePhoto
-);
-router.post(
-  "/api/auth/generate-recovery-code",
-  controller.generateRecoveryCode
-);
-// Rooms
-router.get("/api/rooms/enter-room", controller.enterRoom);
+router.post("/auth/login", controller.login);
+router.post("/auth/get-user", controller.getUser);
+router.post("/auth/signup", controller.signup);
+router.post("/auth/verify-email", controller.verifyEmail);
+router.post("/auth/verify-username", controller.verifyUsername);
+router.post("/auth/verify-otp", controller.verifyOTP);
+router.post("/auth/create-password", controller.createPassword);
+router.post("/auth/update-username", controller.updateUsername);
+router.post("/auth/update-profile-photo-image", controller.updateProfilePhoto);
+router.post("/auth/generate-recovery-code", controller.generateRecoveryCode);
 
-// Catch All
-router.all("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"));
-});
+// App
+router.get("/app", controller.getApp);
+
+// Rooms
+router.get("/rooms/enter-room", controller.enterRoom);
+
 
 module.exports = router;

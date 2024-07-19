@@ -1,3 +1,5 @@
+const { User } = require("./models");
+const { Room } = require("./rooms");
 const mongoose = require("mongoose");
 
 async function init() {
@@ -13,4 +15,6 @@ async function init() {
 
 module.exports = {
   init,
+  User,
+  Room,
 };

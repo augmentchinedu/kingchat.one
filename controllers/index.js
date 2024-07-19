@@ -1,5 +1,5 @@
 const { auth } = require("../firebase");
-const { User } = require("../db/models");
+const { User, Room } = require("../db");
 const functions = require("../functions");
 
 const ShortUniqueId = require("short-unique-id");
@@ -179,8 +179,23 @@ module.exports = {
       else res.send(false);
     } else res.send(false);
   },
+
+  // App
+  getApp: (req, res) => {
+    const id = req.query.id;
+    const app = {
+      name: "King Chat",
+      rooms: Room.getAllRooms(id),
+    };
+    res.send(app);
+  },
+
   // Rooms
   enterRoom: async (req, res) => {
-    res.send("No Room");
+    let id = req.query.uid;
+    let roomID = req.query.roomID;
+
+    const room = Room.enterRoom(id, roomID);
+    res.send(room);
   },
 };

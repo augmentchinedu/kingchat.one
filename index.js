@@ -9,11 +9,18 @@ const express = require("express");
 const { Server } = require("socket.io");
 
 const router = require("./routes");
+const { initIO } = require("./io");
 
 // App
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+initIO(io);
 
 // Middlewares
 app.use(cors());
@@ -23,7 +30,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "client", "dist")));
 
 // Router
-app.use(router);
+app.use("/api", router);
+
+// Catch All
+app.all("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+});
 
 const PORT = process.env.PORT || 3000;
 
