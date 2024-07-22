@@ -159,14 +159,19 @@ const messages = [
 ];
 
 class Chat {
-  constructor(room) {
-    Object.assign(this, room);
-
+  constructor(chat) {
+    Object.assign(this, chat);
+    this.chatid = "cbc";
+    this.lastMessage = {
+      message: this.message,
+      time: Date.now(),
+    };
     this.messages = messages;
   }
 
   static getAllChats(id) {
     console.log("Sorting Chats By User ID.", id);
+
     return chats;
   }
 
@@ -178,5 +183,7 @@ class Chat {
     return room;
   }
 }
+
+for (const [index, chat] of chats.entries()) chats[index] = new Chat(chat);
 
 module.exports = { Chat };

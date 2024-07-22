@@ -1,3 +1,4 @@
+const { Chat } = require("../classes");
 const initIO = (app) => {
   // App
   app.on("connection", (socket) => {
@@ -20,8 +21,13 @@ const user = (user) => {
     const { chatid, message } = payload;
 
     console.log(chatid, message);
+
     let chat = {
       chatid,
+      name: "XXXXX",
+      username: "UUUUU",
+      message,
+
       lastMessage: message,
       messages: [
         {
@@ -29,6 +35,7 @@ const user = (user) => {
         },
       ],
     };
+    chat = new Chat(chat);
     user.emit("message", chat);
   });
   console.log("Someone Just Connected");
