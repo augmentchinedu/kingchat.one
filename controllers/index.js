@@ -1,5 +1,7 @@
 const { auth } = require("../firebase");
-const { User, Room } = require("../db");
+const { User } = require("../db");
+const { Chat, Room } = require("../classes");
+
 const functions = require("../functions");
 
 const ShortUniqueId = require("short-unique-id");
@@ -12,6 +14,24 @@ const verifyEmailAddress = async (uid) => {
 
   return;
 };
+
+const getRecentUsers = async () => {
+  console.log("Getting Recent Users");
+  let users = await User.find();
+
+  for (let [index, user] of users.entries()) {
+    user = user.toObject();
+
+    delete user.email;
+
+    users[index] = user;
+  }
+  users.sort((a, b) => {
+    return a.lastSignInTime - b.lastSignInTime;
+  });
+  return users;
+};
+
 
 module.exports = {
   login: async (req, res) => {
@@ -151,6 +171,7 @@ module.exports = {
       res.send(error.message);
     }
   },
+
   generateRecoveryCode: async (req, res) => {
     const id = req.body.id;
     const code = Math.floor(100000 + Math.random() * 900000);
@@ -181,12 +202,16 @@ module.exports = {
   },
 
   // App
-  getApp: (req, res) => {
+  getApp: async (req, res) => {
     const id = req.query.id;
+
     const app = {
       name: "King Chat",
+      online: await getRecentUsers(),
+      chats: Chat.getAllChats(id),
       rooms: Room.getAllRooms(id),
     };
+    console.log(app);
     res.send(app);
   },
 

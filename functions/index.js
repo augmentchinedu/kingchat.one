@@ -1,3 +1,4 @@
+const Crypto = require("crypto");
 const { MailtrapClient } = require("mailtrap");
 
 const { User } = require("../db/models");

@@ -1,7 +1,7 @@
 const initIO = (app) => {
   // App
-  app.on("connection", () => {
-    console.log("Someone Just Connected");
+  app.on("connection", (socket) => {
+    user(socket);
   });
 
   //   Rooms
@@ -12,4 +12,25 @@ const initIO = (app) => {
   });
 };
 
+const user = (user) => {
+  console.log("New User", user.id);
+
+  // On Each Message Sent
+  user.on("message", (payload) => {
+    const { chatid, message } = payload;
+
+    console.log(chatid, message);
+    let chat = {
+      chatid,
+      lastMessage: message,
+      messages: [
+        {
+          text: message,
+        },
+      ],
+    };
+    user.emit("message", chat);
+  });
+  console.log("Someone Just Connected");
+};
 module.exports = { initIO };
