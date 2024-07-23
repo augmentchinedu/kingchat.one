@@ -1,6 +1,6 @@
 const { auth } = require("../firebase");
-const { User } = require("../db");
-const { Chat, Room } = require("../classes");
+const { User, Chat } = require("../db");
+const { Room } = require("../classes");
 
 const functions = require("../functions");
 
@@ -27,11 +27,10 @@ const getRecentUsers = async () => {
     users[index] = user;
   }
   users.sort((a, b) => {
-    return a.lastSignInTime - b.lastSignInTime;
+    return b.lastSignInTime - a.lastSignInTime;
   });
   return users;
 };
-
 
 module.exports = {
   login: async (req, res) => {
@@ -54,7 +53,10 @@ module.exports = {
     try {
       let user = await auth.getUser(uid);
       let userData = await User.findById(user.uid);
+
       userData = userData.toObject();
+      delete user.chats;
+
       user = { ...user, ...userData };
       res.send(user);
     } catch (error) {
@@ -204,14 +206,25 @@ module.exports = {
   // App
   getApp: async (req, res) => {
     const id = req.query.id;
+    console.log(id);
+    let user, chats, rooms;
+    user = await User.findById(id);
+    user = user.toObject();
+
+    // Get Chats
+    console.log(user.chats);
+    chats = await Chat.getAllChats(user.chats, id)
+    console.log(chats);
+
+    rooms = Room.getAllRooms(id);
 
     const app = {
       name: "King Chat",
       online: await getRecentUsers(),
-      chats: Chat.getAllChats(id),
-      rooms: Room.getAllRooms(id),
+      chats,
+      rooms,
     };
-    console.log(app);
+
     res.send(app);
   },
 
