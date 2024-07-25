@@ -45,25 +45,31 @@ const chatSchema = new mongoose.Schema(
       },
 
       async getAllChats(chatList, uid) {
-        let User = mongoose.model("User", userSchema);
         let chats = [];
+        let User = mongoose.model("User", userSchema);
 
-        for (chatid of chatList) {
-          let chat;
+        console.log(chatList);
+        try {
+          for (chatid of chatList) {
+            let chat;
 
-          // Get Chat First
-          chat = await this.findById(chatid);
-          chat = chat.toObject();
+            // Get Chat First
+            chat = await this.findById(chatid);
+            console.log(chat);
+            chat = chat.toObject();
 
-          // Get Chat Recipient Profile
-          let recipientID = chatid.split(uid).find((id) => id.length > 0);
-          let recipient = await User.findById(recipientID);
+            // Get Chat Recipient Profile
+            let recipientID = chatid.split(uid).find((id) => id.length > 0);
+            let recipient = await User.findById(recipientID);
 
-          // Add Recipient Profile to Chat
-          chat.recipient = recipient.profile;
+            // Add Recipient Profile to Chat
+            chat.profile = recipient.profile;
 
-          console.log(chat);
-          chats.push(chat);
+            console.log(chat);
+            chats.push(chat);
+          }
+        } catch (error) {
+          console.log("p", error);
         }
 
         return chats;

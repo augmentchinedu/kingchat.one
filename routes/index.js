@@ -21,6 +21,7 @@ router.post("/auth/generate-recovery-code", controller.generateRecoveryCode);
 
 // App
 router.get("/app", controller.getApp);
+router.get("/app/getProfile", controller.getProfile);
 
 // Rooms
 router.get("/rooms/enter-room", controller.enterRoom);

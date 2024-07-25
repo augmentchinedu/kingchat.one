@@ -23,11 +23,13 @@ const getRecentUsers = async () => {
     user = user.toObject();
 
     delete user.email;
+    delete user.chats;
 
-    users[index] = user;
+    users[index] = { profile: { ...user } };
   }
+
   users.sort((a, b) => {
-    return b.lastSignInTime - a.lastSignInTime;
+    return a.lastSignInTime - b.lastSignInTime;
   });
   return users;
 };
@@ -49,22 +51,33 @@ module.exports = {
 
   getUser: async (req, res) => {
     let uid = req.body.uid;
-
+    console.log(uid);
     try {
-      let user = await auth.getUser(uid);
-      let userData = await User.findById(user.uid);
+      let user = await User.findById(uid);
+      user = user.toObject();
 
-      userData = userData.toObject();
+      // Get Chats
+      let chats = await Chat.getAllChats(user.chats, uid);
+
       delete user.chats;
-
-      user = { ...user, ...userData };
-      res.send(user);
+      res.send({ user, chats });
     } catch (error) {
-      console.log(error.message);
+      console.log("x", error.message);
       res.send(error.message);
     }
   },
 
+  getProfile: async (req, res) => {
+    const uid = req.query.uid;
+    try {
+      const user = await User.findById(uid);
+      console.log(user);
+      const profile = user.profile;
+      res.send(profile);
+    } catch (error) {
+      console.log(error);
+    }
+  },
   signup: async (req, res) => {
     try {
       let userRecord = await auth.createUser({
@@ -206,22 +219,13 @@ module.exports = {
   // App
   getApp: async (req, res) => {
     const id = req.query.id;
-    console.log(id);
-    let user, chats, rooms;
-    user = await User.findById(id);
-    user = user.toObject();
 
-    // Get Chats
-    console.log(user.chats);
-    chats = await Chat.getAllChats(user.chats, id)
-    console.log(chats);
+    let rooms, recent;
 
     rooms = Room.getAllRooms(id);
 
     const app = {
-      name: "King Chat",
-      online: await getRecentUsers(),
-      chats,
+      recent: await getRecentUsers(),
       rooms,
     };
 

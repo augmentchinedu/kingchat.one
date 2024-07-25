@@ -18,9 +18,14 @@ const user = (user) => {
   console.log("Someone Just Connected");
 
   // On Each Message Sent
-  user.on("message", async (payload) => {
-    const { chatid, message, uid } = payload;
+  user.on("send", async (payload) => {
+    console.log(payload);
+
     let chat;
+
+    const time = Date.now();
+    const { chatid, uid } = payload;
+    const message = { text: payload.message, time, sender: uid };
 
     console.log(chatid, message);
 
@@ -31,11 +36,12 @@ const user = (user) => {
       // Enter Chat Record To Users
 
       let splitChatID = chatid.split(uid);
-
+      console.log(splitChatID);
       user1 = uid;
       user2 = splitChatID.find((id) => id.length > 0);
 
       console.log(user1, user2);
+
       [user1, user2].forEach(async (uid) => {
         let user = await User.findById(uid);
         user.chats.push(chatid);
@@ -44,17 +50,16 @@ const user = (user) => {
 
       chat = new Chat({
         _id: chatid,
-        messages: [{ text: message, time: Date.now(), sender: uid }],
+        messages: [message],
       });
     }
     // If Chat Already Exists: Update.
-    else
-      chat.messages.unshift({ text: message, time: Date.now(), sender: uid });
+    else chat.messages.unshift(message);
 
     console.log(chat);
     chat.save();
 
-    user.emit("message", chat);
+    user.emit("sent", { chatid, message });
   });
 };
 module.exports = { initIO };
