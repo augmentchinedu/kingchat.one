@@ -97,6 +97,7 @@ module.exports = {
         email: req.body.email,
         username: uid.rnd(),
         dob: new Date(`${req.body.month} ${req.body.day} ${req.body.year}`),
+        chats: [],
         auth: {
           otp: "",
         },

@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
     displayName: String,
     email: String,
     username: String,
-    chats: [String],
+    chats: [{ _id: String, lastDelivered: Number, lastRead: Number }],
     dob: Date,
     photoURL: String,
     lastSignInTime: String,

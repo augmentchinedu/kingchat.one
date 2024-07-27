@@ -31,20 +31,20 @@ const user = (user) => {
 
     chat = await Chat.findById(chatid);
 
+    let splitChatID = chatid.split(uid);
+
+    user1 = uid;
+    user2 = splitChatID.find((id) => id.length > 0);
+
+    console.log(user1, user2);
+
     // If Chat is New: Add ChatID to Users Chats
     if (!chat) {
       // Enter Chat Record To Users
 
-      let splitChatID = chatid.split(uid);
-      console.log(splitChatID);
-      user1 = uid;
-      user2 = splitChatID.find((id) => id.length > 0);
-
-      console.log(user1, user2);
-
       [user1, user2].forEach(async (uid) => {
         let user = await User.findById(uid);
-        user.chats.push(chatid);
+        user.chats.push({ _id: chatid, lastDelivered: 0, lastRead: 0 });
         await user.save();
       });
 
@@ -56,10 +56,28 @@ const user = (user) => {
     // If Chat Already Exists: Update.
     else chat.messages.unshift(message);
 
-    console.log(chat);
     chat.save();
 
     user.emit("sent", { chatid, message });
+
+    // Update Delivery Status
+    const sender = await User.findById(uid);
+    sender.chats.find();
   });
 };
+
+async function init() {
+  const users = await User.find();
+  console.log(users);
+
+  users.forEach((user) => {
+    console.log(user);
+    for (let [index, id] of user.chats.entries()) {
+      console.log(id);
+    }
+  });
+}
+
+init();
+
 module.exports = { initIO };
