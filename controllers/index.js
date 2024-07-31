@@ -59,7 +59,7 @@ module.exports = {
       // Get Chats
       let chats = await Chat.getAllChats(user.chats, uid);
 
-      delete user.chats;
+      delete user.chats
       res.send({ user, chats });
     } catch (error) {
       console.log("x", error.message);

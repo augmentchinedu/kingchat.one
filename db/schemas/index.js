@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema(
     displayName: String,
     email: String,
     username: String,
-    chats: [{ _id: String, lastDelivered: Number, lastRead: Number }],
     dob: Date,
+    chats: [String],
     photoURL: String,
     lastSignInTime: String,
     auth: {
@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema(
 const chatSchema = new mongoose.Schema(
   {
     _id: String,
+    meta: {},
     messages: [{ _id: false, text: String, time: Number, sender: String }],
   },
   {
@@ -48,14 +49,12 @@ const chatSchema = new mongoose.Schema(
         let chats = [];
         let User = mongoose.model("User", userSchema);
 
-        console.log(chatList);
         try {
-          for (chatid of chatList) {
+          for (let chatid of chatList) {
             let chat;
 
             // Get Chat First
             chat = await this.findById(chatid);
-            console.log(chat);
             chat = chat.toObject();
 
             // Get Chat Recipient Profile
@@ -65,11 +64,10 @@ const chatSchema = new mongoose.Schema(
             // Add Recipient Profile to Chat
             chat.profile = recipient.profile;
 
-            console.log(chat);
             chats.push(chat);
           }
         } catch (error) {
-          console.log("p", error);
+          console.log(error);
         }
 
         return chats;

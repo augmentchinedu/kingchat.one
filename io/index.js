@@ -1,8 +1,15 @@
-const { Chat, User } = require("../db");
+const { Chat } = require("../db");
+const users = [];
+
 const initIO = (app) => {
   // App
-  app.on("connection", (socket) => {
-    user(socket);
+  app.on("connection", (user) => {
+    // Set UID on Socket For Identification
+    user.uid = user.handshake.auth.uid;
+
+    // Add User To Online Users
+    users.push(user);
+    initUserSocket(app, user);
   });
 
   //   Rooms
@@ -13,12 +20,19 @@ const initIO = (app) => {
   });
 };
 
-const user = (user) => {
-  console.log("New User", user.id);
+const initUserSocket = (app, user) => {
+  console.log("New User", user.id, user.uid);
   console.log("Someone Just Connected");
 
+  // On Disconnection
+  user.on("disconnect", () => {
+    const userIndex = users.findIndex((socket) => socket.uid == user.uid);
+    users.splice(userIndex, 1);
+  });
+
   // On Each Message Sent
-  user.on("send", async (payload) => {
+  user.on("send", async (payload, res) => {
+    console.log(user.uid);
     console.log(payload);
 
     let chat;
@@ -33,51 +47,84 @@ const user = (user) => {
 
     let splitChatID = chatid.split(uid);
 
-    user1 = uid;
-    user2 = splitChatID.find((id) => id.length > 0);
+    let senderID = uid;
+    let receiverID = splitChatID.find((id) => id.length > 0);
 
-    console.log(user1, user2);
+    let lastSent, lastRead;
+    lastRead = lastSent = Date.now();
 
     // If Chat is New: Add ChatID to Users Chats
     if (!chat) {
       // Enter Chat Record To Users
-
-      [user1, user2].forEach(async (uid) => {
-        let user = await User.findById(uid);
-        user.chats.push({ _id: chatid, lastDelivered: 0, lastRead: 0 });
-        await user.save();
-      });
-
       chat = new Chat({
         _id: chatid,
+        meta: {
+          [senderID]: {
+            lastSent,
+            lastDelivered: 0,
+            lastRead: 0,
+          },
+          [receiverID]: {
+            lastSent: 0,
+            lastDelivered: 0,
+            lastRead: 0,
+          },
+        },
         messages: [message],
       });
     }
+
     // If Chat Already Exists: Update.
-    else chat.messages.unshift(message);
+    else {
+      // Update Sent Status
+      chat.meta[senderID].lastSent = lastSent;
+      chat.meta[receiverID].lastRead = lastRead;
+      chat.markModified("meta");
+
+      // Add New Message
+      chat.messages.unshift(message);
+    }
 
     chat.save();
 
-    user.emit("sent", { chatid, message });
+    res(chatid, { message, reciept: { lastSent, lastRead } });
 
-    // Update Delivery Status
-    const sender = await User.findById(uid);
-    sender.chats.find();
+    const receiver = users.find((socket) => socket.uid == receiverID);
+    console.log(receiver);
+    receiver.emit("message", { chatid, message });
   });
-};
 
-async function init() {
-  const users = await User.find();
-  console.log(users);
+  // Update Reciepts
+  user.on("reciept", async ({ uid, chatid, reciept }) => {
+    const splitChatID = chatid.split(uid);
+    let user1 = uid;
+    let user2 = splitChatID.find((id) => id.length > 0);
 
-  users.forEach((user) => {
-    console.log(user);
-    for (let [index, id] of user.chats.entries()) {
-      console.log(id);
+    let chat = await Chat.findById(chatid);
+
+    // Reciept Guards
+    if (reciept.lastDelivered) {
+      try {
+        chat.meta[user2].lastDelivered = reciept.lastDelivered;
+        chat.markModified("meta");
+
+        chat.save();
+      } catch (error) {
+        console.log(error);
+      }
+      console.log("user2: " + user2);
+    }
+
+    if (reciept.lastRead) {
+      try {
+        chat.meta[user1].lastRead = reciept.lastRead;
+        chat.markModified("meta");
+
+        chat.save();
+      } catch (error) {
+        console.log(error);
+      }
     }
   });
-}
-
-init();
-
+};
 module.exports = { initIO };
