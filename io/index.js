@@ -89,8 +89,8 @@ const initUserSocket = (app, user) => {
 
     res(chatid, { message, reciept: { lastSent, lastRead } });
 
-    const receiver = users.find((socket) => socket.uid == receiverID);
-    if (reciever) receiver.emit("message", { chatid, message });
+    const reciever = users.find((socket) => socket.uid == receiverID);
+    if (reciever) reciever.emit("message", { chatid, message });
   });
 
   // Update Reciepts
