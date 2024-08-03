@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     dob: Date,
     chats: [String],
     photoURL: String,
-    lastSignInTime: String,
+    lastSeen: String,
     auth: {
       otp: String,
     },
@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema(
             username: this.username,
             displayName: this.displayName,
             photoURL: this.photoURL,
+            lastSeen: this.lastSeen,
           };
           return profile;
         },

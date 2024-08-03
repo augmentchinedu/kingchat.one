@@ -29,7 +29,8 @@ const getRecentUsers = async () => {
   }
 
   users.sort((a, b) => {
-    return a.lastSignInTime - b.lastSignInTime;
+    console.log(a.profile, b);
+    return a.profile.lastSignInTime - b.profile.lastSignInTime;
   });
   return users;
 };
@@ -59,7 +60,7 @@ module.exports = {
       // Get Chats
       let chats = await Chat.getAllChats(user.chats, uid);
 
-      delete user.chats
+      delete user.chats;
       res.send({ user, chats });
     } catch (error) {
       console.log("x", error.message);
@@ -224,9 +225,10 @@ module.exports = {
     let rooms, recent;
 
     rooms = Room.getAllRooms(id);
+    recent = await getRecentUsers();
 
     const app = {
-      recent: await getRecentUsers(),
+      recent,
       rooms,
     };
 

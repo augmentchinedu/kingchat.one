@@ -1,4 +1,4 @@
-const { Chat } = require("../db");
+const { Chat, User } = require("../db");
 const users = [];
 
 const initIO = (app) => {
@@ -56,6 +56,15 @@ const initUserSocket = (app, user) => {
     // If Chat is New: Add ChatID to Users Chats
     if (!chat) {
       // Enter Chat Record To Users
+
+      for (let uid of [senderID, receiverID]) {
+        console.log(uid);
+        let user = await User.findById(uid);
+        user.chats.push(chatid);
+        user.save();
+      }
+
+      // Create New Chat
       chat = new Chat({
         _id: chatid,
         meta: {
