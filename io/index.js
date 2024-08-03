@@ -78,7 +78,7 @@ const initUserSocket = (app, user) => {
     else {
       // Update Sent Status
       chat.meta[senderID].lastSent = lastSent;
-      chat.meta[receiverID].lastRead = lastRead;
+      chat.meta[senderID].lastRead = lastRead;
       chat.markModified("meta");
 
       // Add New Message
@@ -87,36 +87,37 @@ const initUserSocket = (app, user) => {
 
     chat.save();
 
+    // Update Sender
     res(chatid, { message, reciept: { lastSent, lastRead } });
 
+    // Update Reciever
     const reciever = users.find((socket) => socket.uid == receiverID);
     if (reciever) reciever.emit("message", { chatid, message });
   });
 
   // Update Reciepts
-  user.on("reciept", async ({ uid, chatid, reciept }) => {
+  user.on("reciept", async ({ uid, chatid, reciept }, res) => {
     const splitChatID = chatid.split(uid);
-    let user1 = uid;
-    let user2 = splitChatID.find((id) => id.length > 0);
+    let senderID = uid;
+    let receiverID = splitChatID.find((id) => id.length > 0);
 
     let chat = await Chat.findById(chatid);
 
     // Reciept Guards
     if (reciept.lastDelivered) {
       try {
-        chat.meta[user2].lastDelivered = reciept.lastDelivered;
+        chat.meta[receiverID].lastDelivered = reciept.lastDelivered;
         chat.markModified("meta");
 
         chat.save();
       } catch (error) {
         console.log(error);
       }
-      console.log("user2: " + user2);
     }
 
     if (reciept.lastRead) {
       try {
-        chat.meta[user1].lastRead = reciept.lastRead;
+        chat.meta[senderID].lastRead = reciept.lastRead;
         chat.markModified("meta");
 
         chat.save();
@@ -124,6 +125,13 @@ const initUserSocket = (app, user) => {
         console.log(error);
       }
     }
+
+    // Update Sender
+    res({ chatid, reciept });
+
+    // Update Reciever
+    const reciever = users.find((socket) => socket.uid == receiverID);
+    if (reciever) reciever.emit("reciept", { chatid, reciept });
   });
 };
 module.exports = { initIO };
