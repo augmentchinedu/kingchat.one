@@ -106,7 +106,7 @@ const initUserSocket = (app, user) => {
     // Reciept Guards
     if (reciept.lastDelivered) {
       try {
-        chat.meta[receiverID].lastDelivered = reciept.lastDelivered;
+        chat.meta[senderID].lastDelivered = reciept.lastDelivered;
         chat.markModified("meta");
 
         chat.save();
