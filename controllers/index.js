@@ -29,8 +29,8 @@ const getRecentUsers = async () => {
   }
 
   users.sort((a, b) => {
-    console.log(a.profile, b);
-    return a.profile.lastSignInTime - b.profile.lastSignInTime;
+    console.log(a, b);
+    return a.profile.lastSeen - b.profile.lastSeen;
   });
   return users;
 };

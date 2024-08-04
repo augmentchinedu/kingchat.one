@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema(
       profile: {
         get() {
           const profile = {
+            _id: this._id,
             username: this.username,
             displayName: this.displayName,
             photoURL: this.photoURL,

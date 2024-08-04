@@ -1,15 +1,35 @@
 const { Chat, User } = require("../db");
-const users = [];
+
+let io;
+
+let users = new Proxy([], {
+  set(array, prop, value) {
+    array[prop] = value;
+    if (prop !== "length") {
+      let profiles = [];
+
+      array.forEach(({ profile }) => profiles.push(profile));
+      io.emit("online", { online: profiles });
+    }
+
+    return true;
+  },
+});
 
 const initIO = (app) => {
+  io = app;
+
   // App
-  app.on("connection", (user) => {
+  app.on("connection", async (user) => {
     // Set UID on Socket For Identification
     user.uid = user.handshake.auth.uid;
 
+    let { profile } = await User.findById(user.uid);
+    user.profile = profile;
+
     // Add User To Online Users
-    users.push(user);
     initUserSocket(app, user);
+    users.push(user);
   });
 
   //   Rooms
@@ -21,13 +41,20 @@ const initIO = (app) => {
 };
 
 const initUserSocket = (app, user) => {
-  console.log("New User", user.id, user.uid);
-  console.log("Someone Just Connected");
+  console.log(user.uid, "Just Connected");
 
   // On Disconnection
   user.on("disconnect", () => {
     const userIndex = users.findIndex((socket) => socket.uid == user.uid);
     users.splice(userIndex, 1);
+  });
+
+  user.on("init", () => {
+    // Initialize King Chat User
+    let online = [];
+    users.forEach(({ profile }) => online.push(profile));
+
+    user.emit("online", { online });
   });
 
   // On Each Message Sent
