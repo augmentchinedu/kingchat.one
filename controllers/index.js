@@ -28,10 +28,7 @@ const getRecentUsers = async () => {
     users[index] = { profile: { ...user } };
   }
 
-  users.sort((a, b) => {
-    console.log(a, b);
-    return a.profile.lastSeen - b.profile.lastSeen;
-  });
+  users.sort((a, b) => b.profile.lastSeen - a.profile.lastSeen);
   return users;
 };
 
