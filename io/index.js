@@ -12,7 +12,8 @@ const initIO = (io) => {
 
   io.on("connection", async (user) => {
     // Set UID on Socket For Identification
-    user.uid = user.handshake.auth.uid;
+    user.uid =
+      user.handshake.auth.uid == "anonymous" ? null : user.handshake.auth.uid;
 
     console.log(user.uid, "Just Connected");
     if (user.uid) {
@@ -27,7 +28,8 @@ const initIO = (io) => {
   });
 
   rooms.on("connection", async (user) => {
-    user.uid = user.handshake.auth.uid;
+    user.uid =
+      user.handshake.auth.uid == "anonymous" ? null : user.handshake.auth.uid;
 
     console.log("Rooms", user.id);
 
