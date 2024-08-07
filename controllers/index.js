@@ -1,7 +1,6 @@
 const { auth } = require("../firebase");
 const { User, Chat } = require("../db");
 const { Room } = require("../classes");
-
 const functions = require("../functions");
 
 const ShortUniqueId = require("short-unique-id");
@@ -221,7 +220,7 @@ module.exports = {
 
     let rooms, recent;
 
-    rooms = Room.getAllRooms(id);
+    rooms = { active: null, all: Room.getAllAccessibleRooms(id) };
     recent = await getRecentUsers();
 
     const app = {
@@ -234,10 +233,10 @@ module.exports = {
 
   // Rooms
   enterRoom: async (req, res) => {
-    let id = req.query.uid;
+    let uid = req.query.uid;
     let roomID = req.query.roomID;
 
-    const room = Room.enterRoom(id, roomID);
+    const room = Room.enterRoom(uid, roomID);
     res.send(room);
   },
 };

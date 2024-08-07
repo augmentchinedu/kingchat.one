@@ -1,6 +1,6 @@
 let rooms = [];
 
-let roomTypes = [
+const roomTypes = [
   {
     name: "General",
     desc: "A general chat room for all",
@@ -62,31 +62,49 @@ const messages = [
   },
 ];
 
+const chatRoomUsersLimit = 12;
 class Room {
   constructor(room) {
     Object.assign(this, room);
 
-    this.messages = messages;
+    this.units = [new Unit(messages)];
   }
 
-  static getAllRooms(id) {
-    console.log("Sorting Rooms By User ID.", id);
-    return { active: null, all: rooms };
+  static getAllAccessibleRooms(id) {
+    let roomTypes = [];
+
+    rooms.forEach(({ id, name, imgURL, desc }) =>
+      roomTypes.push({ id, name, imgURL, desc })
+    );
+    return roomTypes;
   }
 
-  static enterRoom(id, roomID) {
-    console.log("Accessing Room " + id);
+  static enterRoom(uid, roomID) {
+    console.log("Accessing Room " + uid);
+    let room = Object.assign(
+      {},
+      rooms.find((room) => room.id == roomID)
+    );
+    console.log(room, room.units);
 
-    let room = rooms.find((room) => room.id == roomID);
-    console.log(room);
-    return room;
+    for (let [i, unit] of room.units.entries()) {
+      if (unit.users.length < chatRoomUsersLimit) {
+        room.number = i + 1;
+        room.messages = unit.messages;
+        delete room.units;
+        return room;
+      }
+    }
   }
 }
 
-roomTypes.forEach((info) => {
-  const room = new Room(info);
-  room.number = 1;
-  rooms.push(room);
-});
+class Unit {
+  constructor(messages) {
+    this.users = [];
+    this.messages = messages;
+  }
+}
 
-module.exports = { Room };
+roomTypes.forEach((info) => rooms.push(new Room(info)));
+console.log(rooms);
+module.exports = { Room, roomTypes, rooms };
