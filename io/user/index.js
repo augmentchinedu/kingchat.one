@@ -1,5 +1,5 @@
 const { Chat, User } = require("../../db");
-let users = require("../../db/users");
+let { users } = require("../../db/users");
 
 const initUserSocket = (user) => {
   // On Disconnection

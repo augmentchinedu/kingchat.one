@@ -3,7 +3,7 @@ const { initUserSocket } = require("./user");
 const { initRoomsSocket } = require("./rooms");
 let { setIO } = require("./io");
 
-let users = require("../db/users");
+let { users, anonymous } = require("../db/users");
 
 const initIO = (io) => {
   setIO(io);
@@ -15,12 +15,15 @@ const initIO = (io) => {
     user.uid = user.handshake.auth.uid;
 
     console.log(user.uid, "Just Connected");
-    let { profile } = await User.findById(user.uid);
-    user.profile = profile;
+    if (user.uid) {
+      let { profile } = await User.findById(user.uid);
+      user.profile = profile;
+    }
 
     // Add User To Online Users
     initUserSocket(user);
-    users.push(user);
+    if (user.uid) users.push(user);
+    else anonymous.push(user);
   });
 
   rooms.on("connection", async (user) => {
@@ -28,8 +31,10 @@ const initIO = (io) => {
 
     console.log("Rooms", user.id);
 
-    let { profile } = await User.findById(user.uid);
-    user.profile = profile;
+    if (user.uid) {
+      let { profile } = await User.findById(user.uid);
+      user.profile = profile;
+    }
 
     initRoomsSocket(user);
   });

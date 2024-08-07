@@ -16,4 +16,6 @@ let users = new Proxy([], {
   },
 });
 
-module.exports = users;
+let anonymous = new Proxy([],{})
+
+module.exports = {users, anonymous};
