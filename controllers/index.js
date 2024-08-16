@@ -59,11 +59,11 @@ module.exports = {
       delete user.chats;
       res.send({ user, chats });
     } catch (error) {
-      console.log("x", error.message);
+      console.log(error.message);
       res.send(error.message);
     }
   },
-
+ 
   getProfile: async (req, res) => {
     const uid = req.query.uid;
     try {
@@ -75,6 +75,7 @@ module.exports = {
       console.log(error);
     }
   },
+  
   signup: async (req, res) => {
     try {
       let userRecord = await auth.createUser({
