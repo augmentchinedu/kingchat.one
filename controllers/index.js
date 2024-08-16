@@ -1,10 +1,12 @@
 const { auth } = require("../firebase");
 const { User, Chat } = require("../db");
-const { Room } = require("../classes");
+const { Room, BookStore } = require("../classes");
 const functions = require("../functions");
 
 const ShortUniqueId = require("short-unique-id");
 const uid = new ShortUniqueId();
+
+const bookStore = new BookStore();
 
 const verifyEmailAddress = async (uid) => {
   await auth.updateUser(uid, {
@@ -63,7 +65,7 @@ module.exports = {
       res.send(error.message);
     }
   },
- 
+
   getProfile: async (req, res) => {
     const uid = req.query.uid;
     try {
@@ -75,7 +77,7 @@ module.exports = {
       console.log(error);
     }
   },
-  
+
   signup: async (req, res) => {
     try {
       let userRecord = await auth.createUser({
@@ -227,6 +229,7 @@ module.exports = {
     const app = {
       recent,
       rooms,
+      bookStore,
     };
 
     res.send(app);
