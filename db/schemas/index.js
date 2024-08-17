@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema(
     displayName: String,
     email: String,
     username: String,
+    description: String,
     dob: Date,
     chats: [String],
     photoURL: String,
@@ -24,6 +25,7 @@ const userSchema = new mongoose.Schema(
             displayName: this.displayName,
             photoURL: this.photoURL,
             lastSeen: this.lastSeen,
+            description: this.description,
           };
           return profile;
         },

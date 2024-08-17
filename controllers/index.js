@@ -2,18 +2,17 @@ const { auth } = require("../firebase");
 const { User, Chat } = require("../db");
 const { Room, BookStore } = require("../classes");
 const functions = require("../functions");
-
+const { services } = require("../data");
 const ShortUniqueId = require("short-unique-id");
 const uid = new ShortUniqueId();
-
+console.log("controllers file");
+console.log("services:", services);
 const bookStore = new BookStore();
 
 const verifyEmailAddress = async (uid) => {
   await auth.updateUser(uid, {
     emailVerified: true,
   });
-
-  return;
 };
 
 const getRecentUsers = async () => {
@@ -226,7 +225,9 @@ module.exports = {
     rooms = { active: null, all: Room.getAllAccessibleRooms(id) };
     recent = await getRecentUsers();
 
+    console.log(services);
     const app = {
+      services,
       recent,
       rooms,
       bookStore,

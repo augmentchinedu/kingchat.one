@@ -1,0 +1,1 @@
+import{u as l,o as e,h as s,g as n,F as u,n as c,f as p,t as r}from"./index-5uhG7CKp.js";const _=n("p",{class:"mb-8"},"Genres",-1),g={__name:"Index",setup(m){const a=l();return(i,d)=>(e(),s("div",null,[_,n("ul",null,[(e(!0),s(u,null,c(p(a).bookStore.genres,(o,t)=>(e(),s("li",{key:t},r(t+1)+") "+r(o.name),1))),128))])]))}};export{g as default};

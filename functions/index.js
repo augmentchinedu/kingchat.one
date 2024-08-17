@@ -29,7 +29,6 @@ async function generateAndSaveOTP(uid) {
 
   let user = await User.findById(uid);
   user.auth.otp = pin;
-  console.log(user, pin);
   user.save();
 
   return pin;

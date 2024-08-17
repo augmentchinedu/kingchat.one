@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{o,h as t}from"./index-5uhG7CKp.js";const n={};function r(c,s){return o(),t("div",null,"Communities Page")}const i=e(n,[["render",r]]);export{i as default};

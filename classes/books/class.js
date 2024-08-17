@@ -12,10 +12,10 @@ class BookStore {
       let id = name
         .trim()
         .toLowerCase()
-        .replace("  ", " ")
-        .replace("'", "")
-        .replace(" ", "-")
-        .replace("/", "-");
+        .replaceAll("  ", " ")
+        .replaceAll("'", "")
+        .replaceAll(" ", "-")
+        .replaceAll("/", "-");
       this.genres.push({
         id,
         name,

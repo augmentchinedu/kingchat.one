@@ -1,1 +1,0 @@
-import{u as l,f as e,e as n,F as u,n as c,d as p,o as s,t as r}from"./index-P14mNiOH.js";const _=n("p",{class:"mb-8"},"Genres",-1),k={__name:"Index",setup(m){const a=l();return(d,i)=>(s(),e("div",null,[_,n("ul",null,[(s(!0),e(u,null,c(p(a).bookStore.genres,(o,t)=>(s(),e("li",{key:t},r(t+1)+") "+r(o.name),1))),128))])]))}};export{k as default};

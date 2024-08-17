@@ -1,48 +1,48 @@
 require("dotenv").config();
 
-const http = require("http");
-const path = require("path");
-const { init } = require("./db");
-const cors = require("cors");
-const morgan = require("morgan");
-const express = require("express");
-const { Server } = require("socket.io");
+(async () => {
+  const http = require("http");
+  const path = require("path");
+  const cors = require("cors");
+  const morgan = require("morgan");
+  const express = require("express");
+  const { Server } = require("socket.io");
 
-const router = require("./routes");
-const { initIO } = require("./io");
+  await require("./db").init();
+  console.log("haha");
+  const router = require("./routes");
+  const { initIO } = require("./io");
 
-// App
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-  },
-});
+  const app = express();
 
-initIO(io);
+  const server = http.createServer(app);
 
-// Middlewares
-app.use(cors());
-app.use(morgan("tiny"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "client", "dist")));
+  // App
 
-// Router
-app.use("/api", router);
+  const io = new Server(server, {
+    cors: {
+      origin: "*",
+    },
+  });
 
-// Catch All
-app.all("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-});
+  initIO(io);
 
-const PORT = process.env.PORT || 3000;
+  // Middlewares
+  app.use(cors());
+  app.use(morgan("tiny"));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.static(path.join(__dirname, "client", "dist")));
 
-init()
-  .then(() => {
-    server.listen(PORT, console.log(`Server Started @ ${PORT}`));
-  })
-  .catch((err) => console.log(err));
+  // Router
+  app.use("/api", router);
 
-module.exports = { io };
+  // Catch All
+  app.all("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+  });
+
+  const PORT = process.env.PORT || 3000;
+
+  server.listen(PORT, console.log(`Server Started @ ${PORT}`));
+})();
