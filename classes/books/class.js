@@ -6,7 +6,21 @@ class Books {}
 
 class BookStore {
   constructor() {
-    this.genres = genres;
+    this.genres = [];
+
+    genres.forEach((name) => {
+      let id = name
+        .trim()
+        .toLowerCase()
+        .replace("  ", " ")
+        .replace("'", "")
+        .replace(" ", "-")
+        .replace("/", "-");
+      this.genres.push({
+        id,
+        name,
+      });
+    });
   }
 }
 
