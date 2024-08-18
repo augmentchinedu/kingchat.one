@@ -1,1 +1,0 @@
-import{_ as o}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{o as t,h as e}from"./index-Cdw0NIBP.js";const c={};function n(r,a){return t(),e("div",null,"Notifications Page")}const f=o(c,[["render",n]]);export{f as default};

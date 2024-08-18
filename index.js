@@ -1,4 +1,5 @@
 require("dotenv").config();
+const core = require("./core");
 
 (async () => {
   const http = require("http");
@@ -8,8 +9,8 @@ require("dotenv").config();
   const express = require("express");
   const { Server } = require("socket.io");
 
+  core.init();
   await require("./db").init();
-  console.log("haha");
   const router = require("./routes");
   const { initIO } = require("./io");
 
