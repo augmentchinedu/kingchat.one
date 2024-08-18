@@ -24,7 +24,10 @@ const initIO = (io) => {
     // Add User To Online Users
     initUserSocket(user);
     if (user.uid) users.push(user);
-    else anonymous.push(user);
+    else {
+      user.uid = user.id;
+      anonymous.push(user);
+    }
   });
 
   rooms.on("connection", async (user) => {

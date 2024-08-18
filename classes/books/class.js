@@ -16,9 +16,11 @@ class BookStore {
         .replaceAll("'", "")
         .replaceAll(" ", "-")
         .replaceAll("/", "-");
+      let photoURL = `https://storage.googleapis.com/kingchatone.appspot.com/books/${id}.jpeg`;
       this.genres.push({
         id,
         name,
+        photoURL,
       });
     });
   }
