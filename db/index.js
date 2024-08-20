@@ -1,4 +1,4 @@
-const { User, Chat } = require("./models");
+const { User, Chat , Book} = require("./models");
 
 const services = require("../classes/services");
 const mongoose = require("mongoose");
@@ -18,5 +18,6 @@ async function init() {
 module.exports = {
   User,
   Chat,
+  Book,
   init,
 };

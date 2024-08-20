@@ -5,9 +5,9 @@ const functions = require("../functions");
 const { services } = require("../data");
 const ShortUniqueId = require("short-unique-id");
 const uid = new ShortUniqueId();
-console.log("controllers file");
-console.log("services:", services);
-const bookStore = new BookStore();
+
+const authController = require("./auth");
+const books = require("./books");
 
 const verifyEmailAddress = async (uid) => {
   await auth.updateUser(uid, {
@@ -33,6 +33,8 @@ const getRecentUsers = async () => {
 };
 
 module.exports = {
+  ...books,
+  
   login: async (req, res) => {
     const data = { username: req.body.username, password: req.body.password };
 
@@ -230,7 +232,7 @@ module.exports = {
       services,
       recent,
       rooms,
-      bookStore,
+      bookStore: new BookStore(),
     };
 
     res.send(app);

@@ -1,9 +1,10 @@
 const { genres } = require("./data");
-
-class Book {}
+const { Book } = require("../../db");
 
 class Books {}
+let books = 0;
 
+(async () => (books = await Book.countDocuments({})))();
 class BookStore {
   constructor() {
     this.genres = [];
@@ -24,6 +25,7 @@ class BookStore {
       });
     });
   }
-}
 
+  books = books;
+}
 module.exports = { Book, Books, BookStore };

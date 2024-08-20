@@ -27,4 +27,7 @@ router.get("/app/getProfile", controller.getProfile);
 // Rooms
 router.get("/rooms/enter-room", controller.enterRoom);
 
+
+// Books
+router.get('/books/get-genre', controller.getGenre)
 module.exports = router;
