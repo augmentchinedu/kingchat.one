@@ -30,4 +30,5 @@ router.get("/rooms/enter-room", controller.enterRoom);
 
 // Books
 router.get('/books/get-genre', controller.getGenre)
+router.get('/books/get-book', controller.getBook)
 module.exports = router;
