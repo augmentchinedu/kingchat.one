@@ -114,7 +114,6 @@ const initUserSocket = (user) => {
     // Update Reciever
     const users = getUsers();
     const reciever = users.find((socket) => socket.uid == receiverID);
-    console.log("rrr", reciever.uid);
     if (reciever) reciever.emit("message", { chatid, message });
   });
 
