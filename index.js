@@ -9,8 +9,8 @@ const core = require("./core");
   const express = require("express");
   const { Server } = require("socket.io");
 
-  core.init();
   await require("./db").init();
+  await core.init();
   const router = require("./routes");
   const { initIO } = require("./io");
 

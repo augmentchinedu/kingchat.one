@@ -1,3 +1,5 @@
+const services = require("../classes/services");
+const books = require("../classes/books");
 async function init() {
   const { Octokit } = await import("octokit");
 
@@ -7,7 +9,9 @@ async function init() {
     owner: process.env.REPO_OWNER,
     repo: "kingchat.one",
   });
-  console.log(data);
+  console.log("git connected");
+  await services.init();
+  await books.init();
 }
 
 module.exports = { init };

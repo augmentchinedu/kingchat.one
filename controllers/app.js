@@ -2,9 +2,16 @@ const { User, Chat } = require("../db");
 const { Room, BookStore } = require("../classes");
 const { services } = require("../data");
 
+const getAnonymousProfile = (id) => ({
+  _id: id,
+  displayName: "Anonymous " + id.split("anonymous-")[1],
+  photoURL:
+    "https://storage.googleapis.com/kingchatone.appspot.com/users/avatars/anonymous.jpeg",
+});
+
 const getUser = async (req, res) => {
   let uid = req.body.uid;
-  console.log(uid);
+
   try {
     let user = await User.findById(uid);
     user = user.toObject();
@@ -28,7 +35,6 @@ const getApp = async (req, res) => {
   rooms = { active: null, all: Room.getAllAccessibleRooms(id) };
   recent = await getRecentUsers();
 
-  console.log(services);
   const app = {
     services,
     recent,
@@ -41,9 +47,16 @@ const getApp = async (req, res) => {
 
 const getProfile = async (req, res) => {
   const uid = req.query.uid;
+  console.log(uid);
+
+  if (uid.substring(0, 9) == "anonymous") {
+    const profile = getAnonymousProfile(uid);
+    res.send(profile);
+    return;
+  }
+
   try {
     const user = await User.findById(uid);
-    console.log(user);
     const profile = user.profile;
     res.send(profile);
   } catch (error) {

@@ -72,8 +72,6 @@ const verifyUsername = async (req, res) => {
   const username = req.body.username;
 
   let users = await User.find({ username });
-  console.log(users);
-
   if (users.length == 0) res.send(true);
   else res.send(false);
 };
@@ -134,7 +132,6 @@ const generateRecoveryCode = async (req, res) => {
     else res.send(false);
   } else res.send(false);
 };
-
 
 module.exports = {
   login,

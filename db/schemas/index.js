@@ -60,10 +60,20 @@ const chatSchema = new mongoose.Schema(
             // Get Chat First
             chat = await this.findById(chatid);
             chat = chat.toObject();
-
+            let recipient;
             // Get Chat Recipient Profile
             let recipientID = chatid.split(uid).find((id) => id.length > 0);
-            let recipient = await User.findById(recipientID);
+            if (recipientID.substring(0, 9) == "anonymous") {
+              recipient = {
+                profile: {
+                  _id: recipientID,
+                  displayName:
+                    "Anonymous " + recipientID.split("anonymous-")[1],
+                  photoURL:
+                    "https://storage.googleapis.com/kingchatone.appspot.com/users/avatars/anonymous.jpeg",
+                },
+              };
+            } else recipient = await User.findById(recipientID);
 
             // Add Recipient Profile to Chat
             chat.profile = recipient.profile;

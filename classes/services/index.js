@@ -1,15 +1,16 @@
 const { Service } = require("./class");
+const { User } = require("../../db");
 const { auth } = require("../../firebase");
 
 const { services } = new Service();
 
-async function init(User) {
+async function init() {
   for (let [i, serviceInfo] of services.entries()) {
     let service = await User.findById(serviceInfo._id);
 
     if (!service) {
       try {
-        let user = await auth.createUser({
+        await auth.createUser({
           uid: serviceInfo._id,
           email: serviceInfo.email,
           emailVerified: true,
@@ -17,8 +18,6 @@ async function init(User) {
           password: "12345678",
           photoURL: serviceInfo.photoURL,
         });
-
-        console.log(user);
 
         const service = new User({
           _id: serviceInfo._id,

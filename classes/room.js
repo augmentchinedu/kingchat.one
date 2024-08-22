@@ -106,5 +106,5 @@ class Unit {
 }
 
 roomTypes.forEach((info) => rooms.push(new Room(info)));
-console.log(rooms);
+
 module.exports = { Room, roomTypes, rooms };

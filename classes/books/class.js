@@ -1,26 +1,9 @@
 const { genres } = require("./data");
-const { Book } = require("../../db");
 
 class Books {}
 let books = 0;
 
-(async () => {
-  try {
-    books = await Book.countDocuments({});
-  } catch (err) {
-    console.log(err);
-  }
-
-  for (let [i, genre] of genres.entries()) {
-    try {
-      const count = await Book.countDocuments({ genres: { $in: [genre] } });
-      genres[i] = { name: genre, count };
-      console.log(genre, count);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-})();
+const setBooks = (count) => (books = count);
 class BookStore {
   constructor() {
     this.genres = [];
@@ -41,9 +24,8 @@ class BookStore {
         count,
       });
     });
-    console.log(this.genres);
   }
 
   books = books;
 }
-module.exports = { Book, Books, BookStore };
+module.exports = { Books, BookStore, setBooks };

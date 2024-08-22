@@ -3,7 +3,7 @@ const { initUserSocket } = require("./user");
 const { initRoomsSocket } = require("./rooms");
 let { setIO } = require("./io");
 
-let { users, anonymous } = require("../db/users");
+let { getUsers, addUser, addAnonymous } = require("../data");
 
 const initIO = (io) => {
   setIO(io);
@@ -11,32 +11,29 @@ const initIO = (io) => {
   let rooms = io.of("/rooms");
 
   io.on("connection", async (user) => {
-    // Set UID on Socket For Identification
-    user.uid =
-      user.handshake.auth.uid == "anonymous" ? null : user.handshake.auth.uid;
+    user.uid = user.handshake.auth.uid;
 
     console.log(user.uid, "Just Connected");
-    if (user.uid) {
+
+    if (user.uid.substring(0, 9) !== "anonymous") {
       let { profile } = await User.findById(user.uid);
       user.profile = profile;
     }
 
     // Add User To Online Users
     initUserSocket(user);
-    if (user.uid) users.push(user);
-    else {
-      user.uid = user.id;
-      anonymous.push(user);
-    }
+    if (user.handshake.auth.uid.substring(0, 9) !== "anonymous") {
+      addUser(user);
+      console.log(getUsers().length, "pp");
+    } else addAnonymous(user);
   });
 
   rooms.on("connection", async (user) => {
-    user.uid =
-      user.handshake.auth.uid == "anonymous" ? null : user.handshake.auth.uid;
+    user.uid = user.handshake.auth.uid;
 
-    console.log("Rooms", user.id);
+    console.log("Rooms", user.uid);
 
-    if (user.uid) {
+    if (user.uid.substring(0, 9) !== "anonymous") {
       let { profile } = await User.findById(user.uid);
       user.profile = profile;
     }
