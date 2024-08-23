@@ -81,4 +81,16 @@ const getRecentUsers = async () => {
   return users;
 };
 
-module.exports = { getUser, getApp, getProfile, getRecentUsers };
+const getUserPage = async (req, res) => {
+  const username = req.query.username;
+
+  User.findOne({ username })
+    .then((user) => {
+      if (!user) return res.send(null);
+      let page = { profile: user.profile };
+      res.send(page);
+    })
+    .catch((err) => console.error(err));
+};
+
+module.exports = { getUser, getApp, getProfile, getRecentUsers, getUserPage };

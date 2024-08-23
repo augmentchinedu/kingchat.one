@@ -23,12 +23,12 @@ router.post("/auth/generate-recovery-code", controller.generateRecoveryCode);
 // App
 router.get("/app", controller.getApp);
 router.get("/app/getProfile", controller.getProfile);
+router.get("/app/get-user-page", controller.getUserPage);
 
 // Rooms
 router.get("/rooms/enter-room", controller.enterRoom);
 
-
 // Books
-router.get('/books/get-genre', controller.getGenre)
-router.get('/books/get-book', controller.getBook)
+router.get("/books/get-genre", controller.getGenre);
+router.get("/books/get-book", controller.getBook);
 module.exports = router;

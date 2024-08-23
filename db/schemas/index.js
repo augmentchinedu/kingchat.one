@@ -35,6 +35,8 @@ const userSchema = new mongoose.Schema(
     statics: {},
   }
 );
+userSchema.set("toObject", { virtuals: true });
+userSchema.set("toJSON", { virtuals: true });
 
 const chatSchema = new mongoose.Schema(
   {

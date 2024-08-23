@@ -3,7 +3,6 @@ const { Book } = require("../../db");
 const { genres } = require("./data");
 const { setBooks } = require("./class");
 
-console.log(Book);
 async function init() {
   try {
     const books = await Book.countDocuments({});
