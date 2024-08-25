@@ -2,6 +2,11 @@ const { User, Chat, Post } = require("../db");
 const { Room, BookStore } = require("../classes");
 const { services } = require("../data");
 
+const getAuthor = async (uid) => {
+  const author = await User.findById(uid);
+  return author.profile;
+};
+
 const getAnonymousProfile = (id) => ({
   _id: id,
   displayName: "Anonymous " + id.split("anonymous-")[1],
@@ -18,7 +23,16 @@ const getUser = async (req, res) => {
 
     // Get Chats
     const chats = await Chat.getAllChats(user.chats, uid);
-    const posts = await Post.find({});
+    let posts = [];
+
+    const latestPosts = await Post.find({});
+
+    for (let [i, post] of latestPosts.entries()) {
+      post = post.toObject();
+      const { username, displayName, photoURL } = await getAuthor(post.author);
+      post.author = { username, displayName, photoURL };
+      posts[i] = post;
+    }
 
     delete user.chats;
 
