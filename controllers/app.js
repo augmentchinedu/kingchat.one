@@ -31,6 +31,7 @@ const getUser = async (req, res) => {
       post = post.toObject();
       const { username, displayName, photoURL } = await getAuthor(post.author);
       post.author = { username, displayName, photoURL };
+      post.time = post.time.getTime();
       posts[i] = post;
     }
 

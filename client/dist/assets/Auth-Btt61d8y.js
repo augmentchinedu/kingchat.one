@@ -1,0 +1,1 @@
+import{_ as o}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{g as t,d as r,o as c,b as s}from"./index-C5_W0Ht1.js";const n={},_={id:"auth",class:"h-screen"};function a(i,d){const e=s("router-view");return c(),t("div",_,[r(e)])}const p=o(n,[["render",a]]);export{p as default};
