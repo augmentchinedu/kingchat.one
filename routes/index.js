@@ -10,7 +10,6 @@ router.get("/", (req, res) => {
 
 // Auths
 router.post("/auth/login", controller.login);
-router.post("/auth/get-user", controller.getUser);
 router.post("/auth/signup", controller.signup);
 router.post("/auth/verify-email", controller.verifyEmail);
 router.post("/auth/verify-username", controller.verifyUsername);
@@ -23,6 +22,7 @@ router.post("/auth/generate-recovery-code", controller.generateRecoveryCode);
 // App
 router.get("/app", controller.getApp);
 router.get("/app/getProfile", controller.getProfile);
+router.post("/app/get-user", controller.getUser);
 router.get("/app/get-user-page", controller.getUserPage);
 router.post('/create-post', controller.createPost)
 // Rooms

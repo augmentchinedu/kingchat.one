@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{h as o,o as r}from"./index-Cq_jgrYn.js";const t={};function c(n,s){return r(),o("div",null,"Create New Post")}const f=e(t,[["render",c]]);export{f as default};

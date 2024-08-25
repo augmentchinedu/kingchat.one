@@ -1,4 +1,4 @@
-const { User, Chat } = require("../db");
+const { User, Chat, Post } = require("../db");
 const { Room, BookStore } = require("../classes");
 const { services } = require("../data");
 
@@ -17,10 +17,12 @@ const getUser = async (req, res) => {
     user = user.toObject();
 
     // Get Chats
-    let chats = await Chat.getAllChats(user.chats, uid);
+    const chats = await Chat.getAllChats(user.chats, uid);
+    const posts = await Post.find({});
 
     delete user.chats;
-    res.send({ user, chats });
+
+    res.send({ user, chats, posts });
   } catch (error) {
     console.log(error.message);
     res.send(error.message);
