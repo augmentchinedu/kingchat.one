@@ -1,5 +1,5 @@
 const { auth } = require("../firebase");
-const { User } = require("../db");
+const { User, Post } = require("../db");
 
 const updateUsername = async (req, res) => {
   const uid = req.body.uid;
@@ -29,4 +29,18 @@ const updateProfilePhoto = async (req, res) => {
   }
 };
 
-module.exports = { updateUsername, updateProfilePhoto };
+const createPost = async (req, res) => {
+  const post = req.body;
+
+  const newPost = await Post.create({
+    author: post.author,
+    text: post.text,
+    time: new Date(post.time),
+  });
+
+  await newPost.save();
+
+  res.send(true);
+};
+
+module.exports = { updateUsername, updateProfilePhoto, createPost };

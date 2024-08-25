@@ -55,7 +55,8 @@ async function getReportFromLatestCommit() {
 async function sendReportToDiscord(reports) {
   const webhookURL = process.env.DISCORD_WEBHOOK;
 
-  for (let [i, report] of reports.entries()) {
+  // eslint-disable-next-line no-unused-vars
+  for (let report of Object.entries(reports).map(([key, value]) => value)) {
     const message = {
       username: "GitHub Errand Girl",
       avatar_url:

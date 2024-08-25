@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{h as o,o as s}from"./index-Cq_jgrYn.js";const c={},t={id:"chess"};function r(n,_){return s(),o("div",t,"Chess Game")}const f=e(c,[["render",r]]);export{f as default};
