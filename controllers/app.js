@@ -25,14 +25,16 @@ const getUser = async (req, res) => {
     const chats = await Chat.getAllChats(user.chats, uid);
     let posts = [];
 
-    const latestPosts = await Post.find({});
+    const latestPosts = await Post.find({}).sort({ time: -1 });
 
     for (let [i, post] of latestPosts.entries()) {
       post = post.toObject();
       const { username, displayName, photoURL } = await getAuthor(post.author);
-      post.author = { username, displayName, photoURL };
-      post.time = post.time.getTime();
-      posts[i] = post;
+      posts[i] = {
+        author: { username, displayName, photoURL },
+        text: post.text,
+        createdAt: post.createdAt.getTime(),
+      };
     }
 
     delete user.chats;
