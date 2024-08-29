@@ -3,7 +3,6 @@ const express = require("express");
 const router = express.Router();
 const controller = require("../controllers");
 
-console.log("router file");
 router.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"));
 });
@@ -24,7 +23,7 @@ router.get("/app", controller.getApp);
 router.get("/app/getProfile", controller.getProfile);
 router.post("/app/get-user", controller.getUser);
 router.get("/app/get-user-page", controller.getUserPage);
-router.post('/create-post', controller.createPost)
+router.post("/create-post", controller.createPost);
 // Rooms
 router.get("/rooms/enter-room", controller.enterRoom);
 
