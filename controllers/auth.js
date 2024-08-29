@@ -45,7 +45,7 @@ const signup = async (req, res) => {
     });
 
     user.save().then(() => {
-      functions.authsenticate(user);
+      functions.authenticate(user);
     });
   } catch (error) {
     res.status(400).send(error);
@@ -142,3 +142,4 @@ module.exports = {
   verifyOTP,
   generateRecoveryCode,
 };
+

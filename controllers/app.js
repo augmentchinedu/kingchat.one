@@ -16,6 +16,7 @@ const getAnonymousProfile = (id) => ({
 
 const getUser = async (req, res) => {
   let uid = req.body.uid;
+  uid = uid.substring(0, 9) == "anonymous" ? "anonymous" : uid;
 
   try {
     let user = await User.findById(uid);
