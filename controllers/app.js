@@ -2,9 +2,14 @@ const { User, Chat, Post } = require("../db");
 const { Room, BookStore } = require("../classes");
 const { services } = require("../data");
 
-const getAuthor = async (uid) => {
-  const author = await User.findById(uid);
-  return author.profile;
+const getAuthors = async (data) => {
+  let authors = [];
+
+  for (let uid of data) {
+    const author = await User.findById(uid);
+    authors.push(author.profile);
+  }
+  return authors;
 };
 
 const getAnonymousProfile = (id) => ({
@@ -30,16 +35,17 @@ const getUser = async (req, res) => {
 
     for (let [i, post] of latestPosts.entries()) {
       post = post.toObject();
-      const { username, displayName, photoURL } = await getAuthor(post.author);
+      const authors = await getAuthors(post.authors);
+
       posts[i] = {
-        author: { username, displayName, photoURL },
+        authors,
         text: post.text,
         createdAt: post.createdAt.getTime(),
       };
     }
 
     delete user.chats;
-
+    console.log(posts);
     res.send({ user, chats, posts });
   } catch (error) {
     console.log(error.message);

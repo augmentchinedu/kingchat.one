@@ -28,6 +28,17 @@ const core = require("./core");
 
   initIO(io);
 
+  // HTTPS Redirect
+  app.use((req, res, next) => {
+    if (process.env.NODE_ENV == "production")
+      if (req.headers["x-forwarded-proto"] !== "https") {
+        return res.redirect(`https://${req.headers.host}${req.url}`);
+      }
+    next();
+  });
+
+  app.set("trust proxy", true);
+
   // Middlewares
   app.use(cors());
   app.use(morgan("tiny"));
@@ -37,6 +48,7 @@ const core = require("./core");
 
   // Router
   app.use("/api", router);
+  app.use("/chrome", router);
 
   // Catch All
   app.all("*", (req, res) => {

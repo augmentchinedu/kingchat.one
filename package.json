@@ -7,6 +7,10 @@
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
+  "engines": {
+    "node": "20.x",
+    "npm": "10.x"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/augmentchinedu/kingchat.one.git"

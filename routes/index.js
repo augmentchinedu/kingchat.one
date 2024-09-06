@@ -30,4 +30,10 @@ router.get("/rooms/enter-room", controller.enterRoom);
 // Books
 router.get("/books/get-genre", controller.getGenre);
 router.get("/books/get-book", controller.getBook);
+
+//
+// CHROME UPDATES
+//
+router.post("/x-post", controller.xPost);
+
 module.exports = router;

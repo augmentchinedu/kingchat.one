@@ -23,6 +23,7 @@ const updateProfilePhoto = async (req, res) => {
     await auth.updateUser(uid, {
       photoURL: imgURL,
     });
+    
     res.send(true);
   } catch (error) {
     res.send(error.message);
@@ -33,7 +34,7 @@ const createPost = async (req, res) => {
   const post = req.body;
 
   const newPost = await Post.create({
-    author: post.author,
+    authors: post.authors,
     text: post.text,
     time: new Date(post.time),
   });

@@ -2,8 +2,14 @@ const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema(
   {
-    author: String,
+    authors: [String],
     text: String,
+    media: [
+      {
+        type: String,
+        url: String,
+      },
+    ],
   },
   {
     timestamps: true,

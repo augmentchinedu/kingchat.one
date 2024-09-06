@@ -1,0 +1,19 @@
+runtime: nodejs
+env: flex
+
+runtime_config:
+  operating_system: "ubuntu22"
+
+# Optional settings
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 5
+
+# Optional - Environment variables
+env_variables:
+  NODE_ENV: production
+
+handlers:
+- url: /*
+  script: auto
+  secure: always
