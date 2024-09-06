@@ -8,7 +8,7 @@ async function init() {
     const books = await Book.countDocuments({});
     setBooks(books);
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 
   for (let [i, genre] of genres.entries()) {
@@ -16,10 +16,10 @@ async function init() {
       const count = await Book.countDocuments({ genres: { $in: [genre] } });
       genres[i] = { name: genre, count };
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
-  console.log("Books Counted");
+  console.info("Books Counted");
 }
 
 module.exports = { BookStore, init };

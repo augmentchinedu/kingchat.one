@@ -48,7 +48,7 @@ const getUser = async (req, res) => {
     console.log(posts);
     res.send({ user, chats, posts });
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
     res.send(error.message);
   }
 };
@@ -86,7 +86,7 @@ const getProfile = async (req, res) => {
     const profile = user.profile;
     res.send(profile);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

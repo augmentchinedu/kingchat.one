@@ -80,7 +80,6 @@ class Room {
   }
 
   static enterRoom(uid, roomID) {
-    console.log("Accessing Room " + uid);
     let room = Object.assign(
       {},
       rooms.find((room) => room.id == roomID)

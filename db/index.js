@@ -9,7 +9,7 @@ async function init() {
     );
     if (isConnected) console.log("Connected To App Database");
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 

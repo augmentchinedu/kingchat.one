@@ -47,7 +47,7 @@ const chatSchema = new mongoose.Schema(
             chats.push(chat);
           }
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
 
         return chats;

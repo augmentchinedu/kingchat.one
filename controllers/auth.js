@@ -9,7 +9,7 @@ const login = async (req, res) => {
   const data = { username: req.body.username, password: req.body.password };
 
   let result = await User.find({ username: data.username });
-  if (result.length == 0) res.status(400).send("auths/invalid-credential");
+  if (result.length == 0) res.status(400).send("auth/invalid-credential");
   else {
     const user = {
       email: result[0].email,
@@ -39,7 +39,7 @@ const signup = async (req, res) => {
       username: uid.rnd(),
       dob: new Date(`${req.body.month} ${req.body.day} ${req.body.year}`),
       chats: [],
-      auths: {
+      auth: {
         otp: "",
       },
     });
@@ -63,7 +63,6 @@ const verifyEmail = async (req, res) => {
     const user = await auth.getUserByEmail(req.body.email);
     res.send(user);
   } catch (error) {
-    console.log(error);
     res.send(error);
   }
 };
@@ -81,9 +80,9 @@ const verifyOTP = async (req, res) => {
   let result = await User.find({ _id: data.uid });
   let user = result[0];
 
-  if (user.auths.otp == data.code) {
+  if (user.auth.otp == data.code) {
     let newUserObj = user.toObject();
-    delete newUserObj.auths;
+    delete newUserObj.auth;
 
     user.overwrite(newUserObj);
     await user.save();
@@ -102,7 +101,7 @@ const createPassword = async (req, res) => {
     });
     res.send(true);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
     res.send(false);
   }
 };
@@ -123,7 +122,7 @@ const generateRecoveryCode = async (req, res) => {
   }
 
   if (user) {
-    user.auths.otp = code;
+    user.auth.otp = code;
     await user.save();
     let isRecoveryCodeSent = await functions.sendRecoveryCode(user.email, code);
 
@@ -142,4 +141,3 @@ module.exports = {
   verifyOTP,
   generateRecoveryCode,
 };
-

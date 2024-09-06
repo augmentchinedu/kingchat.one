@@ -23,9 +23,16 @@ const updateProfilePhoto = async (req, res) => {
     await auth.updateUser(uid, {
       photoURL: imgURL,
     });
-    
+
+    let user = await User.findById(uid);
+    if (user) {
+      user.photoURL = imgURL;
+
+      user.save();
+    }
     res.send(true);
   } catch (error) {
+    console.error(error);
     res.send(error.message);
   }
 };

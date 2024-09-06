@@ -5,14 +5,11 @@ const initUserSocket = (user) => {
   // On Disconnection
   user.on("disconnect", () => {
     let users;
-    let x = getUsers().length;
-    let y = getAnonymous().length;
-    console.log(x, y);
-
+    
     const uid = user.handshake.auth.uid;
     if (uid.substring(0, 9) == "anonymous") {
       users = getAnonymous();
-      console.log("anonymous", users.length);
+      console.info("anonymous", users.length);
     } else users = getUsers();
 
     const userIndex = users.findIndex((socket) => socket.uid == user.uid);
@@ -20,12 +17,8 @@ const initUserSocket = (user) => {
 
     if (uid.substring(0, 9) == "anonymous") {
       setAnonymous(users);
-      console.log("anonymous", users.length);
+      console.info("anonymous", users.length);
     } else setUsers(users);
-
-    x = getUsers().length;
-    y = getAnonymous().length;
-    console.log(x, y);
   });
 
   user.on("init", () => {
@@ -33,22 +26,18 @@ const initUserSocket = (user) => {
     let online = [];
     const users = getUsers();
     users.forEach(({ profile }) => online.push(profile));
-    console.log("online:" + users.length);
+    console.info("online:" + users.length);
     user.emit("online", { online });
   });
 
   // On Each Message Sent
   user.on("send", async (payload, res) => {
-    console.log(user.uid);
-    console.log(payload);
 
     let chat;
 
     const time = Date.now();
     const { chatid, uid } = payload;
     const message = { text: payload.message, time, sender: uid };
-
-    console.log(chatid, message);
 
     chat = await Chat.findById(chatid);
 
@@ -71,7 +60,7 @@ const initUserSocket = (user) => {
             user.chats.push(chatid);
             user.save();
           } catch (err) {
-            console.log(err);
+            console.error(err);
           }
         }
       }
@@ -123,9 +112,7 @@ const initUserSocket = (user) => {
     let senderID = uid;
     let receiverID = splitChatID.find((id) => id.length > 0);
 
-    console.log(chatid, senderID, receiverID);
     let chat = await Chat.findById(chatid);
-    console.log(chat);
     // Reciept Guards
     if (reciept.lastDelivered) {
       try {
@@ -134,7 +121,7 @@ const initUserSocket = (user) => {
 
         chat.save();
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
 
@@ -145,7 +132,7 @@ const initUserSocket = (user) => {
 
         chat.save();
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
 
@@ -156,10 +143,7 @@ const initUserSocket = (user) => {
     let users;
     if (receiverID.substring(0, 9) == "anonymous") users = getAnonymous();
     else users = getUsers();
-    console.log(users)
-    console.log(receiverID);
     const reciever = users.find((socket) => socket.uid == receiverID);
-    console.log(reciever);
     if (reciever) reciever.emit("reciept", { chatid, reciept });
   });
 };

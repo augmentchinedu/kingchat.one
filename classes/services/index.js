@@ -31,7 +31,7 @@ async function init() {
         await service.save();
         addToServices(service, i);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
 

@@ -7,7 +7,7 @@ router.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"));
 });
 
-// Auths
+// auth
 router.post("/auth/login", controller.login);
 router.post("/auth/signup", controller.signup);
 router.post("/auth/verify-email", controller.verifyEmail);
