@@ -71,6 +71,7 @@ class Room {
   }
 
   static getAllAccessibleRooms(id) {
+    id; //
     let roomTypes = [];
 
     rooms.forEach(({ id, name, imgURL, desc }) =>

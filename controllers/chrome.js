@@ -5,18 +5,30 @@ const xPost = async (req, res) => {
 
   if (post.username == "_augment") post.username = "augment";
 
-  const user = await User.find({ username: post.username });
+  const users = await User.find({ username: post.username });
+  const user = users[0];
+
   if (user) {
-    const tweet = await Post.find({ author: user.uid, text: post.text });
-
-    if (!tweet) {
-      const newPost = await Post.create({
-        authors: [user.uid],
+    try {
+      const tweets = await Post.find({
+        authors: { $in: [user._id] },
         text: post.text,
-        time: new Date(post.time),
       });
+      console.log(tweets);
+      if (tweets.length == 0) {
+        let data = {
+          authors: [user._id],
+          text: post.text,
+          createdAt: new Date(post.time),
+        };
+        if (post.media) data.media = post.media;
 
-      await newPost.save();
+        const newPost = await Post.create(data);
+
+        await newPost.save();
+      }
+    } catch (err) {
+      console.error(err);
     }
   }
 

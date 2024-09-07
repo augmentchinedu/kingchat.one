@@ -42,6 +42,7 @@ const chatSchema = new mongoose.Schema(
             } else recipient = await User.findById(recipientID);
 
             // Add Recipient Profile to Chat
+            console.log(recipient);
             chat.profile = recipient.profile;
 
             chats.push(chat);
