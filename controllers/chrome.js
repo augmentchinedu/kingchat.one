@@ -7,20 +7,20 @@ const xPost = async (req, res) => {
 
   const users = await User.find({ username: post.username });
   const user = users[0];
-
   if (user) {
     try {
       const tweets = await Post.find({
         authors: { $in: [user._id] },
         text: post.text,
       });
-      console.log(tweets);
+      
       if (tweets.length == 0) {
         let data = {
           authors: [user._id],
           text: post.text,
           createdAt: new Date(post.time),
         };
+
         if (post.media) data.media = post.media;
 
         const newPost = await Post.create(data);
