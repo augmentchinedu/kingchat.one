@@ -40,12 +40,12 @@ const getUser = async (req, res) => {
       posts[i] = {
         authors,
         text: post.text,
+        media: post.media,
         createdAt: post.createdAt.getTime(),
       };
     }
 
     delete user.chats;
-    console.log(posts);
     res.send({ user, chats, posts });
   } catch (error) {
     console.error(error.message);
@@ -73,7 +73,6 @@ const getApp = async (req, res) => {
 
 const getProfile = async (req, res) => {
   const uid = req.query.uid;
-  console.log(uid);
 
   if (uid.substring(0, 9) == "anonymous") {
     const profile = getAnonymousProfile(uid);

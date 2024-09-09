@@ -1,1 +1,0 @@
-import{_ as o}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{c as e,j as r}from"./index-DKjW9iIm.js";const c={};function t(a,n){return e(),r("div",null,"Bookmarks Page")}const m=o(c,[["render",t]]);export{m as default};
