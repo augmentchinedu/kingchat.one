@@ -30,10 +30,16 @@ const core = require("./core");
 
   // HTTPS Redirect
   app.use((req, res, next) => {
-    if (process.env.NODE_ENV == "production")
+    if (process.env.NODE_ENV == "production") {
       if (req.headers["x-forwarded-proto"] !== "https") {
         return res.redirect(`https://${req.headers.host}${req.url}`);
       }
+
+      if (req.hostname === "www.kingchat.one") {
+        return res.redirect(301, "https://kingchat.one" + req.originalUrl);
+      }
+    }
+
     next();
   });
 
