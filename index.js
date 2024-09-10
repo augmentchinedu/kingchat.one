@@ -37,7 +37,7 @@ const core = require("./core");
 
       if (req.hostname === "www.kingchat.one") {
         return res.redirect(301, "https://kingchat.one" + req.originalUrl);
-      }
+       }
     }
 
     next();
@@ -63,5 +63,5 @@ const core = require("./core");
 
   const PORT = process.env.PORT || 3000;
 
-  server.listen(PORT, console.log(`Server Started @ ${PORT}`));
+  server.listen(PORT, console.info(`Server Started @ ${PORT}`));
 })();

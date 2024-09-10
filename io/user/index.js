@@ -5,7 +5,7 @@ const initUserSocket = (user) => {
   // On Disconnection
   user.on("disconnect", () => {
     let users;
-    
+
     const uid = user.handshake.auth.uid;
     if (uid.substring(0, 9) == "anonymous") {
       users = getAnonymous();
@@ -26,91 +26,25 @@ const initUserSocket = (user) => {
     let online = [];
     const users = getUsers();
     users.forEach(({ profile }) => online.push(profile));
-    console.info("online:" + users.length);
     user.emit("online", { online });
   });
 
   // On Each Message Sent
   user.on("send", async (payload, res) => {
+    await send(payload, res);
+  });
 
-    let chat;
+  // On Each Message Sent To Service
+  user.on("sendToService", async (payload, res) => {
+    const chat = await send(payload, res);
 
-    const time = Date.now();
-    const { chatid, uid } = payload;
-    const message = { text: payload.message, time, sender: uid };
-
-    chat = await Chat.findById(chatid);
-
-    let splitChatID = chatid.split(uid);
-
-    let senderID = uid;
-    let receiverID = splitChatID.find((id) => id.length > 0);
-
-    let lastSent, lastRead;
-    lastRead = lastSent = Date.now();
-
-    // If Chat is New: Add ChatID to Users Chats
-    if (!chat) {
-      // Enter Chat Record To Users
-
-      for (let uid of [senderID, receiverID]) {
-        if (uid.substring(0, 9) !== "anonymous") {
-          try {
-            let user = await User.findById(uid);
-            user.chats.push(chatid);
-            user.save();
-          } catch (err) {
-            console.error(err);
-          }
-        }
-      }
-
-      // Create New Chat
-      chat = new Chat({
-        _id: chatid,
-        meta: {
-          [senderID]: {
-            lastSent,
-            lastDelivered: 0,
-            lastRead: 0,
-          },
-          [receiverID]: {
-            lastSent: 0,
-            lastDelivered: 0,
-            lastRead: 0,
-          },
-        },
-        messages: [message],
-      });
-    }
-
-    // If Chat Already Exists: Update.
-    else {
-      // Update Sent Status
-      chat.meta[senderID].lastSent = lastSent;
-      chat.meta[senderID].lastRead = lastRead;
-      chat.markModified("meta");
-
-      // Add New Message
-      chat.messages.unshift(message);
-    }
-
-    chat.save();
-
-    // Update Sender
-    res(chatid, { message, reciept: { lastSent, lastRead } });
-
-    // Update Reciever
-    const users = getUsers();
-    const reciever = users.find((socket) => socket.uid == receiverID);
-    if (reciever) reciever.emit("message", { chatid, message });
+    user.emit("message", await replyAsService(payload, chat));
   });
 
   // Update Reciepts
   user.on("reciept", async ({ uid, chatid, reciept }, res) => {
-    const splitChatID = chatid.split(uid);
     let senderID = uid;
-    let receiverID = splitChatID.find((id) => id.length > 0);
+    let receiverID = chatid.split(uid).find((id) => id.length > 0);
 
     let chat = await Chat.findById(chatid);
     // Reciept Guards
@@ -130,7 +64,7 @@ const initUserSocket = (user) => {
         chat.meta[senderID].lastRead = reciept.lastRead;
         chat.markModified("meta");
 
-        chat.save();
+        await chat.save();
       } catch (error) {
         console.error(error);
       }
@@ -147,5 +81,114 @@ const initUserSocket = (user) => {
     if (reciever) reciever.emit("reciept", { chatid, reciept });
   });
 };
+
+// Send Message
+async function send(payload, res) {
+  let chat;
+
+  const time = Date.now();
+  const { chatid, uid } = payload;
+  const message = { text: payload.message, time, sender: uid };
+
+  chat = await Chat.findById(chatid);
+
+  let senderID = uid;
+  let receiverID = chatid.split(uid).find((id) => id.length > 0);
+
+  let lastSent, lastRead;
+  lastRead = lastSent = Date.now();
+
+  // If Chat is New: Add ChatID to Users Chats
+  if (!chat) {
+    // Enter Chat Record To Users
+
+    for (let uid of [senderID, receiverID]) {
+      if (uid.substring(0, 9) !== "anonymous") {
+        try {
+          let user = await User.findById(uid);
+          user.chats.push(chatid);
+          user.save();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
+    // Create New Chat
+    chat = new Chat({
+      _id: chatid,
+      meta: {
+        [senderID]: {
+          lastSent,
+          lastDelivered: 0,
+          lastRead: 0,
+        },
+        [receiverID]: {
+          lastSent: 0,
+          lastDelivered: 0,
+          lastRead: 0,
+        },
+      },
+      messages: [message],
+    });
+  }
+
+  // If Chat Already Exists: Update.
+  else {
+    // Update Sent Status
+    chat.meta[senderID].lastSent = lastSent;
+    chat.meta[senderID].lastRead = lastRead;
+    chat.markModified("meta");
+
+    // Add New Message
+    chat.messages.unshift(message);
+  }
+
+  await chat.save();
+
+  // Update Sender
+  res(chatid, { message, reciept: { lastSent, lastRead } });
+
+  // Update Reciever
+  const users = getUsers();
+  const reciever = users.find((socket) => socket.uid == receiverID);
+  if (reciever) reciever.emit("message", { chatid, message });
+
+  return chat;
+}
+
+async function replyAsService({ chatid, uid }, chat) {
+  const service = chatid.split(uid).find((id) => id.length > 0);
+
+  const message = {
+    text: "I received your message. This is a response. I dont know what to say",
+    time: Date.now(),
+    sender: service,
+  };
+
+  let lastSent, lastRead;
+  lastRead = lastSent = Date.now();
+
+  chat.meta[service].lastSent = lastSent;
+  chat.meta[service].lastRead = lastRead;
+  chat.markModified("meta");
+
+  // Add New Message
+  chat.messages.unshift(message);
+
+  await chat.save();
+
+  const users = getUsers();
+  const sender = users.find((socket) => socket.uid == service);
+
+  if (sender)
+    sender.emit("message", {
+      chatid,
+      message,
+      reciept: { lastSent, lastRead },
+    });
+
+  return { chatid, message };
+}
 
 module.exports = { initUserSocket };

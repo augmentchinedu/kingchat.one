@@ -56,14 +56,12 @@ const getUser = async (req, res) => {
 const getApp = async (req, res) => {
   const id = req.query.id;
 
-  let rooms, recent;
+  let rooms;
 
   rooms = { active: null, all: Room.getAllAccessibleRooms(id) };
-  recent = await getRecentUsers();
 
   const app = {
     services,
-    recent,
     rooms,
     bookStore: new BookStore(),
   };
@@ -89,23 +87,6 @@ const getProfile = async (req, res) => {
   }
 };
 
-const getRecentUsers = async () => {
-  console.log("Getting Recent Users");
-  let users = await User.find();
-
-  for (let [index, user] of users.entries()) {
-    user = user.toObject();
-
-    delete user.email;
-    delete user.chats;
-
-    users[index] = { profile: { ...user } };
-  }
-
-  users.sort((a, b) => b.profile.lastSeen - a.profile.lastSeen);
-  return users;
-};
-
 const getUserPage = async (req, res) => {
   const username = req.query.username;
 
@@ -118,4 +99,4 @@ const getUserPage = async (req, res) => {
     .catch((err) => console.error(err));
 };
 
-module.exports = { getUser, getApp, getProfile, getRecentUsers, getUserPage };
+module.exports = { getUser, getApp, getProfile, getUserPage };

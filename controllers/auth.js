@@ -14,7 +14,6 @@ const login = async (req, res) => {
     const user = {
       email: result[0].email,
     };
-    console.log(user);
     res.send(user);
   }
 };

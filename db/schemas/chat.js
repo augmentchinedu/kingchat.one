@@ -11,10 +11,6 @@ const chatSchema = new mongoose.Schema(
   {
     methods: {},
     statics: {
-      updateChatWithNewMessage(message) {
-        console.log(this, message);
-      },
-
       async getAllChats(chatList, uid) {
         let chats = [];
         let User = mongoose.model("User", userSchema);
@@ -42,7 +38,6 @@ const chatSchema = new mongoose.Schema(
             } else recipient = await User.findById(recipientID);
 
             // Add Recipient Profile to Chat
-            console.log(recipient);
             chat.profile = recipient.profile;
 
             chats.push(chat);
