@@ -161,7 +161,7 @@ async function replyAsService({ chatid, uid }, chat) {
   const service = chatid.split(uid).find((id) => id.length > 0);
 
   const message = {
-    text: "I received your message. This is a response. I dont know what to say",
+    text: "I received your message. This is an automated response. I dont know what to say",
     time: Date.now(),
     sender: service,
   };
