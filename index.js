@@ -17,7 +17,7 @@ const core = require("./core");
   const app = express();
 
   const server = http.createServer(app);
-
+  
   // App
 
   const io = new Server(server, {
@@ -30,16 +30,10 @@ const core = require("./core");
 
   // HTTPS Redirect
   app.use((req, res, next) => {
-    if (process.env.NODE_ENV == "production") {
+    if (process.env.NODE_ENV == "production")
       if (req.headers["x-forwarded-proto"] !== "https") {
         return res.redirect(`https://${req.headers.host}${req.url}`);
       }
-
-      if (req.hostname === "www.kingchat.one") {
-        return res.redirect(301, "https://kingchat.one" + req.originalUrl);
-       }
-    }
-
     next();
   });
 
@@ -63,5 +57,5 @@ const core = require("./core");
 
   const PORT = process.env.PORT || 3000;
 
-  server.listen(PORT, console.info(`Server Started @ ${PORT}`));
+  server.listen(PORT, console.log(`Server Started @ ${PORT}`));
 })();
