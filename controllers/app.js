@@ -45,6 +45,8 @@ const getUser = async (req, res) => {
       };
     }
 
+    posts.length = 20;
+
     delete user.chats;
     res.send({ user, chats, posts });
   } catch (error) {
