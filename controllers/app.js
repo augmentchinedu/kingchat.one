@@ -31,7 +31,7 @@ const getUser = async (req, res) => {
     const chats = await Chat.getAllChats(user.chats, uid);
     let posts = [];
 
-    const latestPosts = await Post.find({}).sort({ createdAt: -1 });
+    const latestPosts = await Post.find({}).sort({ createdAt: -1 }).limit(10)
 
     for (let [i, post] of latestPosts.entries()) {
       post = post.toObject();

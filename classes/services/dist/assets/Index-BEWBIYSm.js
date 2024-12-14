@@ -1,0 +1,1 @@
+import{_ as e}from"dist/assets/_plugin-vue_export-helper-DlAUqK2U.js";import{c as o,j as c}from"dist/assets/index-JGSeoenM.js";const t={},r={id:"ludo"};function n(s,_){return o(),c("div",r," Ludo Game ")}const f=e(t,[["render",n]]);export{f as default};
