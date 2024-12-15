@@ -1,5 +1,5 @@
-require("dotenv").config();
 const core = require("./core");
+require("dotenv").config();
 
 (async () => {
   const http = require("http");
