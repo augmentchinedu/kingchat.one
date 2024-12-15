@@ -1,1 +1,0 @@
-import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{c,j as r}from"./index-JGSeoenM.js";const o={};function t(a,n){return c(),r("div",null,"Spaces Page")}const f=e(o,[["render",t]]);export{f as default};

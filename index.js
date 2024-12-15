@@ -2,60 +2,60 @@ const core = require("./core");
 require("dotenv").config();
 
 (async () => {
-  const http = require("http");
-  const path = require("path");
-  const cors = require("cors");
-  const morgan = require("morgan");
-  const express = require("express");
-  const { Server } = require("socket.io");
+	const http = require("http");
+	const path = require("path");
+	const cors = require("cors");
+	const morgan = require("morgan");
+	const express = require("express");
+	const { Server } = require("socket.io");
 
-  await require("./db").init();
-  await core.init();
-  const router = require("./routes");
-  const { initIO } = require("./io");
+	await require("./db").init();
+	await core.init();
+	const router = require("./routes");
+	const { initIO } = require("./io");
 
-  const app = express();
+	const app = express();
 
-  const server = http.createServer(app);
-  
-  // App
+	const server = http.createServer(app);
 
-  const io = new Server(server, {
-    cors: {
-      origin: "*",
-    },
-  });
+	// App
 
-  initIO(io);
+	const io = new Server(server, {
+		cors: {
+			origin: "*",
+		},
+	});
 
-  // HTTPS Redirect
-  app.use((req, res, next) => {
-    if (process.env.NODE_ENV == "production")
-      if (req.headers["x-forwarded-proto"] !== "https") {
-        return res.redirect(`https://${req.headers.host}${req.url}`);
-      }
-    next();
-  });
+	initIO(io);
 
-  app.set("trust proxy", true);
+	// HTTPS Redirect
+	app.use((req, res, next) => {
+		if (process.env.NODE_ENV == "production")
+			if (req.headers["x-forwarded-proto"] !== "https") {
+				return res.redirect(`https://${req.headers.host}${req.url}`);
+			}
+		next();
+	});
 
-  // Middlewares
-  app.use(cors());
-  app.use(morgan("tiny"));
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-  app.use(express.static(path.join(__dirname, "client", "dist")));
+	app.set("trust proxy", true);
 
-  // Router
-  app.use("/api", router);
-  app.use("/chrome", router);
+	// Middlewares
+	app.use(cors());
+	app.use(morgan("tiny"));
+	app.use(express.json());
+	app.use(express.urlencoded({ extended: true }));
+	app.use(express.static(path.join(__dirname, "client", "dist")));
 
-  // Catch All
-  app.all("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-  });
+	// Router
+	app.use("/api", router);
+	app.use("/chrome", router);
 
-  const PORT = process.env.PORT || 3000;
+	// Catch All
+	app.all("*", (req, res) => {
+		res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+	});
 
-  server.listen(PORT, console.log(`Server Started @ ${PORT}`));
+	const PORT = process.env.PORT || 3000;
+
+	server.listen(PORT, console.log(`Server Started @ ${PORT}`));
 })();
